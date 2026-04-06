@@ -1,0 +1,249 @@
+﻿<html><head>
+<link rel="stylesheet" href="temporary-styles.css" />
+</head><body>
+
+<h1>Components of a PV Solar System</h1>
+
+<h2 cbc>PV Panels</h2><div>
+
+<h3 cbc>String Configuration</h3><div>
+
+<p>Serial configuration:</p>
+
+<ul>
+<li>Higher voltage, less current, lower cable loss</li>
+<li>MPPTs love higher voltage</li>
+<li>Output voltage in low temperatures can exceed MPPT's maximum input voltage.</li>
+<li>A single shaded or dirty panel degrades the entire string.</li>
+</ul>
+
+<p>Parallel configuration:</p>
+
+<ul>
+<li>Low output voltage, high current, higher cable losses.</li>
+<li>Immune to shading of individual panels.</li>
+<li>MPP tracking works well, entire array has a single MPP.</li>
+<li>MPPT conversion is less efficient.</li>
+</ul>
+
+<p>Mixed configuration:</p>
+
+<ul>
+<li>Used to balance voltage and current</li>
+<li>MPPT works well as long as strings are matched.</li>
+</ul>
+
+</div><!--h3--String Configuration-->
+
+</div><!--h2--PV Panels-->
+
+<h2 cbc>String Inverters</h2><div>
+
+<p>A string inverter converts the DC delivered from a string of PV panels into AC, which is then fed into the inhouse grid.</p>
+
+<figure class="figure">
+<img src="fig-003.svg" width="250" />
+</figure>
+
+<p>Panels are usually connected in series to obtain a string voltage that is well within the input voltage range of the inverter. Multiple serial strings can be connected to a single string inverter input, as long as</p>
+
+<ul>
+<li>all partial strings have the same type and number of panels</li>
+<li>all panels have the same orientation and tilt angle</li>
+<li>all panels have roughly the same shading situation</li>
+</ul>
+
+</div><!--h2--String Inverters-->
+
+<h2 cbc id="mppt">Maximum Power Point Tracker (MPPT)</h2><div>
+
+<p>An MPP tracker sits between the PV Panels and the string inverter. The MPP tracker maximizes power draw from a PV panel string.</p>
+
+<figure class="figure">
+<img src="fig-004.svg" width="350" />
+</figure>
+
+<p>In practice, the MPPT is integrated into the string inverter, but in some modular concepts the MPPT is separate (Victron for example).</p>
+
+<p>A PV panel is a non-linear, structured device. The maximum voltage is obtained when the outputs are open, i. e. at zero current, the maximum output current is obtained in a short-circuit condition where the output voltage is zero. Since <math><mi>P</mi><mo>=</mo><mi>V</mi><mo>&times;</mo><mi>I</mi></math>, the output power in both situations is zero. The maximum output power is somewhere in between. The voltage-power curve develops a single peak.</p>
+
+<p>The situation gets more complicated if the panel is illuminated unevenly. Since most PV panels are partitioned, the voltage-current curve of the panel becomes distorted, the voltage-power curve develops multiple peaks.</p>
+
+<p>The situation gets even more complicated if multiple panels are connected in series and/or parallel.</p>
+
+<p>An MPPT tries to find the highest power peak in that curve. This is a non-linear optimization task. There are several MPPT algorithms, the cheap and simple ones are a compromise and rarely yield the maximum power output. The most sophisticated algorithms use artificial intelligence or fuzzy logic.</p>
+
+</div><!--h2--Maximum Power Point Tracker (MPPT)-->
+
+<h2 cbc>MPPT Charge Controllers</h2><div>
+
+<p>An MPPT charge controller sits between the PV Panels and the battery. The panels are organized into strings, each string is controlled by an internal maximum power point tracker (MPPT) that maximizes power draw from that PV panel string to compensate shading effects on some or all panels.</p>
+
+<p>A simple PWM is essentially a controlled switch that connects PV output periodically and directly to the battery:</p>
+
+<figure class="text-diagram">
+<p>Solar panel(s) &rarr; PWM &rarr; battery</p>
+</figure>
+
+<p>The battery forces the solar panel output voltage down to the battery voltage, since its internal resistance is much lower than that of the solar panel(s). Therefore, a lot of voltage is wasted.</p>
+
+<p>The maximum power point tracker (MPPT) with a DC output is essentially a DC-DC converter that continuously adjusts its operating point so that the solar panel(s) deliver the maximum possible power while providing a stable, regulated DC output to charge a battery or feed another DC load. The MPPT constantly samples PV voltage and current and calculates the DC power <math><mi>P</mi><mo>=</mo><mi>I</mi><mo>&times;</mo><mi>V</mi></math>.</p>
+
+<p>Since the MPP of solar cells depends on illumination level and temperature, the MPPT uses algorithms like "perturb and observe", "incremental conductance" to track that point in real time.</p>
+
+<p>Inside a typical MPPT is usually a buck (step-down) or a buck-boost (step up/down) converter. The MPPT regulates the duty cycle of the converter. The output is tailored to the needs of the battery or the DC bus.</p>
+
+<p>Examples: Charging a 12V battery from a 30&hellip;40 V panel, feeding a 48 V DC bus from a 100V PV string, supplying DC loads directly in telecom or off-grid systems, or provide a stable DC voltage for subsequent AC conversion.</p>
+
+<p>Placement in the system:</p>
+
+<p>PV panels &rarr; MPPT DC-DC &rarr; Battery</p>
+<p>PV panels &rarr; MPPT DC-DC &rarr; DC Bus</p>
+
+<p>Things to condider:</p>
+
+<ul>
+<li>PV output voltage can exceed the MPPT's maximum input voltage, especially in low ambient temperatures.</li>
+<li><em>Shading</em> causes the PV panel's I-V curve to develop multiple peaks. A simple controller might get stuck on a false peak. A good MPPT controller searches for the global MPP.</li>
+<p>MPPTs work best if the panels have bypass diodes.</p>
+<p>MPPTs work better with panels connected in series, they lover high voltages, conversion losses are lower.</p>
+</ul>
+
+<p>MPPTs are essential:</p>
+
+<ul>
+<li>where high-voltage panels charge low-voltage batteries</li>
+<li>in cold climates</li>
+<li>where panels are shaded</li>
+<li>with long cable runs</li>
+<li>in medium to large off-grid systems</li>
+<li>where efficiency matters</li>
+</ul>
+
+<h3 cbc>Algorithms</h3><div>
+
+<h4 cbc>Perturb & Observe P&O</h4><div>
+
+<ol>
+<li>The controller changes the PWM slightly,</li>
+<li>measures the PV power output</li>
+<li>If P goes up, the controller changes the PWM in the same direction.</li>
+<li>If P goes down, the controller changes the PWM in the opposite direction.</li>
+</ol>
+
+<p>This algorithm is easy to implement, works well in stable conditions and requires only low computational power. On the downside, the algorighm can oscillate around the MPP, or can get confused by sudden irradiance changes caused by passing clouds etc. Additionally, the algorithm may lock to a false peak under partial shading.</p>
+
+</div><!--h4--Perturb & Observe P&O-->
+
+<h4 cbc>Incremental Conductance</h4><div>
+
+<p>This method uses the slope of the power curve:</p>
+
+<math display="block">
+<mfrac><mrow><mi>d</mi><mi>P</mi></mrow><mrow><mi>d</mi><mi>V</mi></mrow></mfrac><mo>=</mo><mn>0</mn>
+</math>
+
+<p>Since <math><mi>P</mi><mo>=</mo><mi>V</mi><mo>&times;</mo><mi>I</mi></math> and both <math><mi>V</mi></math> and <math><mi>I</mi></math> are a function of <math><mi>V</mi></math>, we have to apply the product rule and obtain</p>
+
+<math display="block">
+<mfrac><mrow><mi>d</mi><mi>P</mi></mrow><mrow><mi>d</mi><mi>V</mi></mrow></mfrac><mo>=</mo><mn>0</mn><mo>=</mo><mi>V</mi><mfrac><mrow><mi>d</mi><mi>I</mi></mrow><mrow><mi>d</mi><mi>V</mi></mrow></mfrac><mo>+</mo><mi>I</mi>
+</math>
+
+<p>Ordering the terms yields</p>
+
+<math display="block">
+<mfrac><mrow><mi>d</mi><mi>I</mi></mrow><mrow><mi>d</mi><mi>V</mi></mrow></mfrac><mo>=</mo><mo>&minus;</mo><mfrac><mi>I</mi><mi>V</mi></mfrac>
+</math>
+
+<p>where <math><mi>d</mi><mi>I</mi><mo>/</mo><mi>d</mi><mi>V</mi></math> is the incremental conductance, and <math><mi>I</mi><mo>/</mo><mi>V</mi></math> is the instantaneous conductance.</p>
+
+<p>This method is more accurage that P&O and handles irradiance changes better, and causes less oscillations around the MPP. On the other hand, the algorithm is more complex and requires more precise measurements.</p>
+
+</div><!--h4--Incremental Conductance-->
+
+<h4 cbc>Constant Voltage CV</h4><div>
+
+<p>This method assumes that the MPP voltage is fixed at 0.7&hellip;0.8 of the panel's open-circuit voltage. This method is very simple and exibits no oscillation. It is used in microcontrollers with very limited resources. The downside is that it is not suitable for serious harvesting because of its inaccuracy under changing conditions.</p>
+
+</div><!--h4--Constant Voltage CV-->
+
+<h4 cbc>Fractional Open-Circuit Voltage FOCV</h4><div>
+
+<p>Monentarily disconnects the panel and measures the open circuit voltage, then reculates the output voltage to a fixed fraction (e. g. 0.76). This method is also very simple, slightly better than CV, but interrupts current flow and is still not very accurate.</p>
+
+</div><!--h4--Fractional Open-Circuit Voltage FOCV-->
+
+</div><!--h3--Algorithms-->
+
+</div><!--h2--MPPT Charge Controllers-->
+
+<h2 cbc>DC Optimizers</h2><div>
+
+<p>A DC optimizer is combined with a single PV panel to perform <em>panel-level power optimization</em> for the inverter. It is essentially a mini-MPPT for each panel. Sometimes two panels are combined.</p>
+
+<p>Arrangement:</p>
+
+<figure class="text-diagram">
+<p>Panel &rarr; DC optimizer &rarr; String Inverter</p>
+</figure>
+
+<p>Graphically:</p>
+
+<figure class="figure">
+<img src="fig-002.svg" width="250" />
+</figure>
+
+<p>Multiple DC optimizers feed into a single inverter. Efficiency is slightly higher when compared to microinverters.</p>
+
+<p>DC optimizers are useful for roofs with partial shading, panels facing different direcions, and in systems with multiple tilt angles.</p>
+
+<p>The optimizer contains a step-up or step-down DC-DC converter and maintains a fixed voltage for the inverter, which prevents the inverter from dropping out during shading. This makes the inverter's job much easier.</p>
+
+<p>Security features: A DC optimizer provides arc-fault detection and rapid shutdown capability, which is required in many countries. It reduces output voltage when the inverter is off.</p>
+
+<p>A DC optimizer provides panel-level monitoring, such as power output per panel, temperatur, faults, shading patterns. This is incredibly useful for troubleshooting.</p>
+
+</div><!--h2--DC Optimizers-->
+
+<h2 cbc>Microinverters</h2><div>
+
+<p>A microinverter is combined with a single PV panel. Its task is to track the panel's maximum power point (MPPT) and provide a fixed AC voltage to the PV system.</p>
+
+<figure class="text-diagram">
+<p>PV Panel &rarr; Microinverter &rarr; Inhouse Grid</p>
+</figure>
+
+<p>Due to the increased complexity, microinverters are more expensive than DC optimizers.</p>
+
+</div><!--h2--Microinverters-->
+
+<h2 cbc>Smart DC-DC + AC-DC 48V Battery Charger</h2><div>
+
+<p>Inputs: Solar PV DC via external MPPT, AC mains.</p>
+<p>Ouput: 240V AC off-grid</p>
+<p>Battery types: LiFePO4, 12/24/48 V stystem</p>
+
+<p>These devices are designed for road vehicles, caravans, camping.</p>
+
+</div><!--h2--Smart DC-DC + AC-DC 48V Battery Charger-->
+
+<h2 cbc>12 V DC-DC + AC-DC + Solar MPPT</h2><div>
+
+<p>Inputs: Solar DC, alternator DC, AC mains</p>
+<p>Ouput: 12 V DC</p>
+<p>Battery types: 12 V system.</p>
+<p>Use case: Road vehicles, marine.</p>
+
+</div><!--h2--12 V DC-DC + AC-DC + Solar MPPT-->
+
+<h2 cbc>AC-DC Charger With Solar Input 60 V</h2><div>
+
+<p>Inputs: Solar PV panels, AC mains.</p>
+<p>Ouput: 60 V</p>
+<p>Battery types: LiFePO4 60 V</p>
+<p>Use case: Larger battery banks, mobility systems</p>
+
+</div><!--h2--AC-DC Charger With Solar Input 60 V-->
+
+
+</body></html>

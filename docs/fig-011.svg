@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="532" height="252" viewBox="-140 -40 530 250" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" style="border: 1px solid silver" stroke-linecap="round" stroke-width="1" stroke="black" fill="white">
+<style>
+	.ac { stroke : blue }
+	.connector { stroke-width : 2px ; fill : none ; }
+	.data { stroke : #888 ; stroke-width : 1px }
+	.dc { stroke : red }
+	.hidden { display : none }
+	.monitoring { stroke : #C44 ; stroke-width : 1px }
+	.private-grid { stroke : green }
+	.public-grid { stroke : blue }
+	.textbox.left-aligned > text { text-anchor : start }
+	
+	g.textbox rect { stroke : none }
+	circle.connector.dc { fill : red }
+	circle.data { stroke : #888 ; fill : #888 }
+	line { fill : none }
+	path { fill : none }
+	text { text-anchor : middle ; dominant-baseline : central ; fill : black ; stroke : none  }
+	</style>
+
+<g id="panel-2" transform="translate(-100,0)">
+	<rect x="-30" y="-30" width="60" height="60" />
+	<text y="-10">PV</text>
+	<text y="10">Panels</text>
+	<path class="connector dc" d="M 30 0 h 30" /> 
+	</g>
+<g id="mppt" transform="translate(-10,0)">
+	<rect x="-30" y="-30" width="60" height="60" />
+	<text>MPPT</text>
+	<path class="connector dc" d="M 30 0 h 150" /> 
+	</g>
+<g id="charge-controller" transform="translate(50,80)">
+	<rect x="-40" y="-30" width="80" height="60" />
+	<text y="-10">Charge</text>
+	<text y="10">Controller</text>
+	<path class="connector dc" d="M 0 -30 v -50" />
+	<circle class="connector dc" cy="-80" r="3" />
+	<path class="data" d="M 40 0 h 100 v -40" />
+	</g>
+<g id="battery" transform="translate(50,170)">
+	<rect x="-40" y="-20" width="80" height="40" />
+	<text>Battery</text>
+	<path class="connector dc" d="M 0 -20 v -40" />
+	<path class="connector dc" d="M 0 -40 h 160 v -85" />
+	<circle class="connector dc" cy="-40" r="3" />
+	</g>
+<g id="bms" transform="translate(230,170)">
+	<rect x="-30" y="-20" width="60" height="40" />
+	<text>BMS</text>
+	<path class="monitoring" d="M -30 0 h -110 m 50 6 l 6 -12" />
+	<text x="-90" y="15">n</text>
+	<path class="data" d="M 0 -20 v -110" />
+	</g>
+<g id="inverter" transform="translate(210,15)">
+	<g>
+		<rect x="-40" y="-30" width="80" height="60" />
+		<text>Inverter</text>
+		</g>
+	<path class="connector public-grid" d="M 40 -15 h 50" />
+	<path class="connector private-grid" d="M 40 15 h 50" />
+	<g class="textbox left-aligned" transform="translate(95,-15)">
+		<text>Public Grid</text>
+		</g>
+	<g class="textbox left-aligned" transform="translate(95,15)">
+		<text>Private Grid</text>
+		</g>
+	</g>
+</svg>

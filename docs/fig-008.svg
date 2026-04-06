@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="412" height="82" viewBox="-140 -40 410 80" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" style="border: 1px none silver" stroke-linecap="round" stroke-width="1" stroke="black" fill="white">
+<style>
+	.connector { stroke-width : 2px ; stroke : blue ; fill : none ; }
+	.dc { stroke : red }
+	.public-grid { stroke : blue }
+	.private-grid { stroke : green }
+	.hidden { display : none }
+	g.textbox rect { stroke : none }
+	.textbox.left-aligned > text { text-anchor : start }
+	circle.connector { fill : blue ; }
+	line { fill : none }
+	path { fill : none }
+	text { text-anchor : middle ; dominant-baseline : central ; fill : black ; stroke : none  }
+	</style>
+
+<g id="panel-2" transform="translate(-100,0)">
+	<rect x="-30" y="-30" width="60" height="60" />
+	<text y="-10">Panel</text>
+	<text y="10">String</text>
+	<path class="connector dc" d="M 30 0 h 40" /> 
+	</g>
+<g id="mppt" transform="translate(0,0)">
+	<rect x="-30" y="-30" width="60" height="60" />
+	<text>MPPT</text>
+	<path class="connector dc" d="M 30 0 h 40" /> 
+	</g>
+<g id="inverter" transform="translate(100,0)">
+	<g transform="translate(0,0)">
+		<rect x="-30" y="-30" width="60" height="60" />
+		<text>Inverter</text>
+		</g>
+	<path class="connector public-grid" d="M 30 -15 h 50" />
+	<path class="connector private-grid" d="M 30 15 h 50" />
+	<g class="textbox left-aligned" transform="translate(85,-15)">
+		<text>Public Grid</text>
+		</g>
+	<g class="textbox left-aligned" transform="translate(85,15)">
+		<text>Private Grid</text>
+		</g>
+	</g>
+</svg>
