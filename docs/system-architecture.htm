@@ -8,19 +8,29 @@
 
 <p>To understand PV architectures, we will first have a look into the structure of a <em>hybrid inverter</em>, an all-in-one system, sort of:</p>
 
-<figure class="figure">
+<figure class="figure"><figcaption><a href="fig-010.svg">fig-010.svg</a></figcaption>
 <img src="fig-010.svg" />
 </figure>
 
-<p>At the left top, we have a string of PV panels, which produce an unregulated DC voltage of several hundred volts. The current is consumed by the <a href="system-components.htm#mppt">MPP tracker</a>, which is a DC-DC converter that stabilizes the output voltage to the battery system voltage, approximately 48V in this case. Current from the PV panels flows through the battery management system (<a href="system-components.htm#bms">BMS</a>) into the battery, a string of battery cells connected in parallel and/or in series.</p>
+<p>At the left top, we have a string of PV panels, which produce an unregulated DC voltage of several hundred volts. The current is consumed by the <a href="system-components.htm#mppt">MPP tracker</a>, which is a DC-DC converter that optimises power draw from the panel string and produces a stabilized battery system voltage on the battery bus, approximately 48V DC in this case. Current from the MPPT converter flows through the battery management system (<a href="system-components.htm#bms">BMS</a>) into the battery cells, which are connected in parallel and/or in series.</p>
 
-<p>The solar panel output current can also flow into the bidirectional DC-AC converter. Its <em>direction</em> input determines whether the converter is used as a generator (DC&rarr;AC) or battery charger (AC&rarr;DC).</p>
+<p>The bidirectional DC-AC converter is connected to this DC battery bus. Its <em>direction</em> input determines whether the converter is used as a generator (DC&rarr;AC) or battery charger (AC&rarr;DC). In generator mode, the DC-AC converter pushes energy into the buffered inhouse grid. If the circuit breaker is closed, the converter can compensate the inhouse load, and even push engergy into the public grid.</p>
 
-<p>On the top right side is the <em>public 240 V AC Grid</em>, which is separated from the privat grid (bottom right) by a circuit breaker. During normal operation, this switch is closed, so that public and private grids are electrically connected.</p>
+<p>On the top right side is the <em>public 240 V AC Grid</em>, which is separated from the buffered inhouse grid (bottom right) by a circuit breaker. During normal operation, this switch is closed, so that public and private grids are electrically synchronized and connected. In case of public grid outages, the circuit breaker is opened immediately to prevent the DC-AC converter from pushing engergy into the public grid.</p>
 
-<p>In generator mode, the DC-AC converter pushes energy into these grids, as determined by the current control input.</p>
+<p>If the DC-AC converter is the heart, the <em>controller</em> is the brain of the system. The controller senses currents that flow into or out of the public and inhouse grids. By controlling the bidirectional DC-AC converter, the controller can compensate inhouse loads, so that no current is drawn from the public grid and event over-compensate, in which case the surplus energy is pushed into the public grid.</p>
 
-<p>If the DC-AC converter is the heart, the <em>controller</em> is the brain of the system. The controller senses currents that flow into or out of the public grid, </p>
+<p>Critical electric infrastructure such as lighing, computers, central heading and refrigerators should be connected to the buffered inhouse grid. In case of public grid outages, they are supplied from the engery stored in the batteries.</p>
+
+<p>Uncritical infrastructure, such as washing machines and dishwashers, and high-current appliances such as water flow heaters should be connected to the unbuffered inhouse grid to prevent them to deplete the batteries within minutes.</p>
+
+<p>Some notes on the battery and battery management unit at the bottom: The BMS measures current flow in and out of the batteries. If the charge or discharge current limit is exceeded, an internal circuit breaker (not shown in the diagram) is tripped to disconnect the 48 V DC bus from the battery cells.</p>
+
+<p>The cell tap lines at the left side connect to the positive end of each battery. This allows the BMS to monitor the voltage of each battery cell and control the cell balancing circuits in order to prevent cells from being charged unevenly.</p>
+
+<p>Additionally, thermal sensors (&vartheta;) allow the BMS to monitor the cell temperatures.</p>
+
+<p>An analog battery current output allows the controller to measure the current into or out of the battery, and thereby control charging and discharging the batteriess within their limits.</p>
 
 </div><!--h2--Hybrid Inverter-->
 
